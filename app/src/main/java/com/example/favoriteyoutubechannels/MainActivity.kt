@@ -13,9 +13,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
-    lateinit var channels: ArrayList<TopChannel>
+
     lateinit var channelList: ListView
     lateinit var channelHandler: ChannelHandler
+
+    companion object{
+        lateinit var channels: ArrayList<TopChannel>
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
                 val adapter = MainListAdapter(applicationContext, channels)
                 channelList.adapter = adapter
+                registerForContextMenu(channelList)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -115,12 +120,16 @@ class MainActivity : AppCompatActivity() {
                 //put it in an extra
                 val intent = Intent(applicationContext, EditChannel::class.java)
                 intent.putExtra("chanId", chanId)
+                intent.putExtra("position", info.position)
 
                 //start activity
                 startActivity(intent)
                 true
             }
             R.id.delete_channel -> {
+                if(channelHandler.delete(channels[info.position])){
+                    Toast.makeText(applicationContext, "Channel Deleted.", Toast.LENGTH_LONG).show()
+                }
                 true
             }
             else -> super.onContextItemSelected(item)

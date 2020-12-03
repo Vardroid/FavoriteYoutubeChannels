@@ -19,4 +19,14 @@ class ChannelHandler {
         channelRef.child(id!!).setValue(channel)
         return true
     }
+
+    fun update(channel: TopChannel): Boolean {
+        channelRef.child(channel.id!!).setValue(channel)
+        return true
+    }
+
+    fun delete(channel: TopChannel): Boolean {
+        channelRef.child(channel.id!!).removeValue()
+        return true
+    }
 }
